@@ -180,6 +180,14 @@ export class Player {
             dashBtn.addEventListener('touchstart', (e) => { e.preventDefault(); this.bark(); });
         }
 
+        const camBtn = document.getElementById('btn-cam');
+        if (camBtn) {
+            camBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.firstPerson = !this.firstPerson;
+            });
+        }
+
         this.barkRadius = 15;
         this.isBarking = false;
         this.radar = new Radar(this.group);
