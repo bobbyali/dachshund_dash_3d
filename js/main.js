@@ -6,7 +6,7 @@ import { Rabbit } from './Rabbit.js';
 export const GAME_BOUNDS = 50; // -50 to 50 = 100m total width/depth
 export const MAX_DEPTH = -20;
 let score = 0;
-let timeRemaining = 120; // 2 minutes
+let timeRemaining = 60; // 1 minute
 let isGameOver = false;
 let isGameStarted = false; // Declared here
 let lastTime = 0;
