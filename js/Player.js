@@ -122,8 +122,9 @@ export class Player {
         this.idleTimer = 0;
         this.lastWhineTime = 0;
 
+        // --- Keyboard Controls ---
         window.addEventListener('keydown', (e) => {
-            if (e.key === ' ') e.preventDefault(); // Stop browser scrolling/button clicking
+            if (e.key === ' ') e.preventDefault();
             this.keys[e.key.toLowerCase()] = true;
         });
         window.addEventListener('keyup', (e) => {
@@ -132,6 +133,52 @@ export class Player {
             if (e.key.toLowerCase() === 'c') this.firstPerson = !this.firstPerson;
             if (e.key === ' ') this.bark();
         });
+
+        // --- Mouse Controls ---
+        window.addEventListener('mousedown', (e) => {
+            if (e.button === 0) this.keys['w'] = true;
+            if (e.button === 2) this.bark();
+        });
+        window.addEventListener('mouseup', (e) => {
+            if (e.button === 0) this.keys['w'] = false;
+        });
+        window.addEventListener('contextmenu', (e) => e.preventDefault()); // Disable right-click menu
+
+        // Mouse Steering (Infinite via Pointer Lock)
+        window.addEventListener('mousemove', (e) => {
+            const sensitivity = 0.002;
+            if (document.pointerLockElement) {
+                // Infinite rotation when locked
+                this.group.rotation.y -= e.movementX * sensitivity * 1.5;
+            } else {
+                // Fallback (limited by screen edge) if not locked
+                this.group.rotation.y -= e.movementX * sensitivity;
+            }
+        });
+
+        // Request Pointer Lock on any click during gameplay
+        window.addEventListener('mousedown', () => {
+            if (!document.pointerLockElement) {
+                const canvas = document.querySelector('canvas');
+                if (canvas) canvas.requestPointerLock();
+            }
+        });
+
+        // --- Mobile Controls ---
+        const bindMobile = (id, key) => {
+            const btn = document.getElementById(id);
+            if (!btn) return;
+            btn.addEventListener('touchstart', (e) => { e.preventDefault(); this.keys[key] = true; });
+            btn.addEventListener('touchend', (e) => { e.preventDefault(); this.keys[key] = false; });
+        };
+        bindMobile('btn-up', 'w');
+        bindMobile('btn-left', 'a');
+        bindMobile('btn-right', 'd');
+
+        const dashBtn = document.getElementById('btn-dash');
+        if (dashBtn) {
+            dashBtn.addEventListener('touchstart', (e) => { e.preventDefault(); this.bark(); });
+        }
 
         this.barkRadius = 15;
         this.isBarking = false;
@@ -181,9 +228,6 @@ export class Player {
         if (this.keys['s']) { this.group.position.addScaledVector(forward, -this.speed * dt); moved = true; }
         if (this.keys['a']) { this.group.rotation.y += 2.5 * dt; moved = true; }
         if (this.keys['d']) { this.group.rotation.y -= 2.5 * dt; moved = true; }
-
-        if (this.keys['j']) this.group.position.y -= this.digSpeed * dt;
-        if (this.keys['k']) this.group.position.y += this.digSpeed * dt;
 
         const terrainY = getTerrainHeight(this.group.position.x, this.group.position.z);
         this.group.position.x = Math.max(-GAME_BOUNDS, Math.min(GAME_BOUNDS, this.group.position.x));

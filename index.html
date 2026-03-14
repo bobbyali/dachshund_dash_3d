@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dachshund Dash</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
     <style>
         body {
             margin: 0;
@@ -231,11 +232,86 @@
         .barking {
             box-shadow: inset 0 0 50px 20px rgba(255, 255, 255, 0.8) !important;
         }
+
+        /* Mobile Controls */
+        #mobile-controls {
+            display: none;
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            pointer-events: none;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .mobile-btn {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            pointer-events: auto;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .mobile-btn:active {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(0.9);
+        }
+
+        #mobile-joystick {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .joystick-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        @media (max-width: 1024px),
+        (pointer: coarse) {
+            #mobile-controls {
+                display: flex;
+            }
+
+            .instructions {
+                display: none;
+                /* Hide keyboard instructions on mobile */
+            }
+
+            #title {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div id="bark-effect"></div>
+    <div id="mobile-controls">
+        <div id="mobile-joystick">
+            <div id="btn-up" class="mobile-btn">▲</div>
+            <div class="joystick-row">
+                <div id="btn-left" class="mobile-btn">◀</div>
+                <div id="btn-right" class="mobile-btn">▶</div>
+            </div>
+        </div>
+        <div id="btn-dash" class="mobile-btn"
+            style="width: 120px; height: 120px; background: rgba(255, 107, 107, 0.4); border-color: #FF6B6B;">BARK!
+        </div>
+    </div>
     <div id="ui-layer">
         <div id="audio-controls">
             <button id="music-toggle" class="toggle-btn">Music: ON 🎵</button>
@@ -247,8 +323,7 @@
             <div id="time-display">Time: 2:00</div>
         </div>
         <div class="instructions">
-            <b>WASD</b>: Move | <b>J/K</b>: Tunnel Down/Up | <b>Spacebar</b>: Bark (Freezes Rabbits) | <b>C</b>: Toggle
-            Camera
+            <b>WASD</b>: Move | <b>Spacebar/Right-Click</b>: Bark & Dash | <b>Mouse</b>: Steer | <b>C</b>: Toggle Camera
         </div>
     </div>
 

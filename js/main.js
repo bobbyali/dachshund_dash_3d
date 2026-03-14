@@ -129,6 +129,10 @@ function setupUI() {
     musicBtn.onfocus = e => e.target.blur();
     sfxBtn.onfocus = e => e.target.blur();
 
+    // Prevent clicking buttons from locking the mouse or starting the game
+    musicBtn.onmousedown = e => e.stopPropagation();
+    sfxBtn.onmousedown = e => e.stopPropagation();
+
     musicBtn.onclick = (e) => {
         e.stopPropagation(); // Don't trigger game start if clicking toggle
         musicEnabled = !musicEnabled;
